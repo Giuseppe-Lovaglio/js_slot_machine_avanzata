@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>SLOT MACHINE</title>
+    <style>
+        body {
+            background-color: #11aaff;
+
+        }
+
+        #border {
+            width: 500px;
+            padding: 10px;
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .contenitore {
+            margin: 0 auto;
+            width: 198px;
+        }
+
+        .slotmachine {
+            width: 64px;
+            height: 64px;
+            float: left;
+            border: 1px dashed black;
+        }
+
+        .pulsantiera {
+            width: 50%;
+            float: left;
+        }
+
+        .pulsante {
+            display: inline-block;
+            text-align: center;
+            font-family: sans-serif;
+            color: black;
+            font-size: 12px;
+            background-color: #693F73;
+            border-radius: 24px;
+        }
+
+        button {
+            display: block;
+            width: 138px;
+            height: 33px;
+            margin: 20px;
+        }
+
+        #esito {
+            width: 100%;
+            height: 33px;
+            font-family: Arial;
+            font-size: 24px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="border">
+        <div class="contenitore">
+            <div class="slotmachine"><img id="uno" src="1.png"></div>
+            <div class="slotmachine"><img id="due" src="1.png"></div>
+            <div class="slotmachine"><img id="tre" src="1.png"></div>
+        </div>
+        <div class="pulsantiera">
+            <button class="pulsante" id="gioca">GIOCA</button>
+        </div>
+        <div class="pulsantiera">
+            <button class="pulsante" id="stop" disabled>STOP</button>
+        </div>
+        <div style="clear:both;"></div>
+        <div id="giocatore"></div>
+        <div id="esito"><!-- Visualizzare qui l'esito della partita --></div>
+    </div>
+    <script>
+        let foto = ["1.png", "2.png", "3.png", "4.png", "5.png"];
+        let polpetta = ["uno", "due", "tre"];
+        let i;
+        let x;
+        let boh;
+        let tentativi = 0;
+        let a;
+        let b;
+        let c;
+        let vittorie = 0;
+        let percentuale = 0;
+        let giocatori = ["player 1", "player 2"];
+        let contatorePartite = 0;
+        let vittorie1 = 0;
+        let vittorie2 = 0;
+        let tentativi1 = 0;
+        let tentativi2 = 0;
+
+        document.getElementById("gioca").addEventListener("click", avvia);
+
+        function avvia() {
+            if (contatorePartite == 0) {
+                document.getElementById("giocatore").innerHTML = "<h1>Tocca al giocatore 1</h1>";
+            }
+
+            else if (contatorePartite == 1) {
+                document.getElementById("giocatore").innerHTML = "<h1>Tocca al giocatore 2</h1>";
+            }
+
+            document.getElementById("esito").style.display = "none";
+
+            for (i = 0; i < 3; i++) {
+                let x = Math.floor(Math.random() * 5);
+                document.getElementById(polpetta[i]).src = foto[x];
+                document.getElementById("gioca").disabled = true;
+                document.getElementById("stop").disabled = false;
+            }
+            boh = setTimeout("avvia()", 800);
+
+        }
+
+        document.getElementById("stop").addEventListener("click", ferma);
+
+        function ferma() {
+
+            contatorePartite += 1;
+            if (contatorePartite > 1) {
+                contatorePartite = 0;
+            }
+
+			if (contatorePartite == 0) {
+                tentativi1 += 1;
+            } 
+
+			else {
+                tentativi2 += 1;
+            }
+
+            clearTimeout(boh);
+            document.getElementById("gioca").disabled = false;
+            document.getElementById("stop").disabled = true;
+            a = document.getElementById("uno").src;
+            b = document.getElementById("due").src;
+            c = document.getElementById("tre").src;
+            document.getElementById("esito").style.display = "block";
+
+			if (a == b && b == c) {
+
+				if (contatorePartite == 0) {
+					vittorie1 += 1;
+                	vittorie = vittorie1;
+                	tentativi = tentativi1;
+                	percentuale = Math.floor(vittorie * 100 / tentativi1);
+            	} 
+
+				else {
+					vittorie2 += 1;
+            	    vittorie = vittorie2;
+            	    tentativi = tentativi2;
+            	    percentuale = Math.floor(vittorie * 100 / tentativi2);
+            	}
+
+				document.getElementById("esito").innerHTML = "<h1 style='color: green;'> " + "Hai vinto!" + "</h1>" + "<p>" + "Tentativi " + tentativi + "<br />" + "Vittorie " + vittorie + "<br />" + " Percentuale " + percentuale + "%" + "</p>";
+			}
+
+            else {
+
+				if (contatorePartite == 0) {
+                vittorie = vittorie1;
+                tentativi = tentativi1;
+                percentuale = Math.floor(vittorie * 100 / tentativi1);
+            	} 
+
+				else {
+            	    vittorie = vittorie2;
+            	    tentativi = tentativi2;
+            	    percentuale = Math.floor(vittorie * 100 / tentativi2);
+            	}
+
+				document.getElementById("esito").innerHTML = "<h1 style='color: red;'> " + "Hai perso!" + "</h1>" + "<p>" + "Tentativi " + tentativi + "<br />" + "Vittorie " + vittorie + "<br />" + " Percentuale " + percentuale + "%" + "</p>";
+			}
+		}
+    </script>
+</body>
+
+</html>
